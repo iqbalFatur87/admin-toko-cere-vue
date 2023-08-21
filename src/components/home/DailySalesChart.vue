@@ -58,6 +58,22 @@ export default {
     chartOptions() {
       return {
         responsive: true,
+        scales: {
+          x: {
+            type: "category",
+            title: {
+              display: true,
+              text: "Date",
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Sales",
+            },
+            beginAtZero: true,
+          },
+        },
       };
     },
   },
