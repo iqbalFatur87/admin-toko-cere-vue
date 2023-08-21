@@ -4,20 +4,6 @@
     <v-card>
       <v-card-title class="headline">Daftar Produk</v-card-title>
       <v-card-text>
-        <v-button>
-          <!-- 'Add Product' Button and Modals -->
-          <v-icon>mdi-plus</v-icon>
-          Add Product
-          <v-modal
-            title="Add Product"
-            :show="show"
-            @close="show = false"
-          >
-            <template v-slot:default>
-              <AddProductForm />
-            </template>
-          </v-modal>
-        </v-button>
         <v-table>
           <template v-slot:default>
             <thead class="custom-thead">
@@ -44,10 +30,10 @@
                     alt="Product Image"
                     height="50px"
                   />
+                  {{ product.image }}
                 </td>
-                <!-- Add Trash Icon and Pencil Icon with Font Awesome or MDI-->
                 <td class="custom-td">
-                  <v-btn @click="editProduct(product)" color="primary" small>
+                  <v-btn @click="openEditModal(product)" color="primary" small>
                     Edit
                   </v-btn>
                   <v-btn @click="deleteProduct(product.id)" color="error" small>
@@ -60,19 +46,48 @@
         </v-table>
       </v-card-text>
     </v-card>
+    <!-- Modal for Edit -->
+    <v-dialog v-model="editModal" max-width="500px">
+      <v-card>
+        <v-card-title>Edit Produk</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="saveEdit">
+            <v-text-field
+              v-model="editedProduct.name"
+              label="Nama"
+              outlined
+              required
+            />
+            <v-text-field
+              v-model="editedProduct.price"
+              label="Harga"
+              outlined
+              required
+            />
+            <!-- Add more fields here if needed -->
+            <v-text-field
+              v-model="editedProduct.image"
+              class="invisible"
+              label="Gambar"
+              outlined
+              required
+            />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="closeEditModal">Batal</v-btn>
+          <v-btn type="submit" @click="saveEdit" color="success">Simpan</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import AddProductForm from "./AddProductForm.vue";
-// import AddProductPage from "./AddProductPage.vue";
 import { mapActions } from "vuex";
 
 export default {
-  components: {
-    AddProductForm,
-    // AddProductPage,
-  },
+  components: {},
   data() {
     return {
       dialog: false,
@@ -83,6 +98,13 @@ export default {
         { text: "Gambar", value: "image" },
         { text: "Aksi", value: "actions", sortable: false },
       ],
+      editModal: false,
+      editedProduct: {
+        shop_id: "",
+        name: "",
+        price: "",
+        image: null, // Initialize to null
+      },
     };
   },
   computed: {
@@ -94,6 +116,35 @@ export default {
     ...mapActions(["deleteProduct"]),
     editProduct(product) {
       this.$router.push({ name: "EditProduct", params: { id: product.id } });
+    },
+    openEditModal(product) {
+      this.editedProduct = { ...product };
+      this.editModal = true;
+    },
+
+    closeEditModal() {
+      this.editedProduct = null;
+      this.editModal = false;
+    },
+
+    async saveEdit() {
+      console.log("editedProduct:", this.editedProduct);
+
+      const { id, name, price, image } = this.editedProduct;
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("image", image); // Append the image data to the FormData
+
+      try {
+        await this.$store.dispatch("updateProduct", {
+          productId: id,
+          productData: formData,
+        });
+        this.closeEditModal();
+      } catch (error) {
+        console.error("Error editing product:", error);
+      }
     },
   },
   created() {
