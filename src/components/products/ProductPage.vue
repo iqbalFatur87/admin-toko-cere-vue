@@ -103,7 +103,7 @@ export default {
         shop_id: "",
         name: "",
         price: "",
-        image: null, // Initialize to null
+        image: "", // Initialize to null
       },
     };
   },
@@ -118,6 +118,7 @@ export default {
       this.$router.push({ name: "EditProduct", params: { id: product.id } });
     },
     openEditModal(product) {
+      console.log("Product", product);
       this.editedProduct = { ...product };
       this.editModal = true;
     },
@@ -129,17 +130,17 @@ export default {
 
     async saveEdit() {
       console.log("editedProduct:", this.editedProduct);
-
       const { id, name, price, image } = this.editedProduct;
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("price", price);
-      formData.append("image", image); // Append the image data to the FormData
+      const productData = {
+        name: name,
+        price: price,
+        image: image,
+      };
 
       try {
         await this.$store.dispatch("updateProduct", {
           productId: id,
-          productData: formData,
+          productData: productData,
         });
         this.closeEditModal();
       } catch (error) {

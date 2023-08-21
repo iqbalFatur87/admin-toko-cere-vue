@@ -56,7 +56,7 @@ export default createStore({
     },
     async updateProduct({ commit }, { productId, productData }) {
       try {
-        await ProductModel.editProduct(productId, productData);
+        await ProductModel.updateProduct(productId, productData);
         commit("updateProduct", { productId, productData }); // Use "updateProduct" mutation here
       } catch (error) {
         console.error("Error editing product:", error);
