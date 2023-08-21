@@ -72,6 +72,12 @@
               outlined
               required
             />
+            <v-text-field
+              v-model="editedProduct.shop_id"
+              label="Shop ID"
+              outlined
+              required
+            />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -84,7 +90,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   components: {},
@@ -100,10 +106,10 @@ export default {
       ],
       editModal: false,
       editedProduct: {
-        shop_id: "",
         name: "",
         price: "",
-        image: "", // Initialize to null
+        image: "",
+        shop_id: "",
       },
     };
   },
@@ -113,29 +119,42 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["deleteProduct"]),
+    ...mapState(["getProduct"]),
+    ...mapActions(["editProduct", "deleteProduct"]),
     editProduct(product) {
-      this.$router.push({ name: "EditProduct", params: { id: product.id } });
+      this.$router.put({ name: "EditProduct", params: { id: product.id } });
     },
     openEditModal(product) {
-      console.log("Product", product);
       this.editedProduct = { ...product };
+      // Setelah mengambil data produk, pastikan untuk mengisi nilai id
+      this.editedProduct.id = product.id;
       this.editModal = true;
     },
 
     closeEditModal() {
-      this.editedProduct = null;
+      this.editedProduct = {
+        id: "", // Reset the id
+        name: "",
+        price: "",
+        image: "",
+      };
       this.editModal = false;
     },
 
     async saveEdit() {
       console.log("editedProduct:", this.editedProduct);
-      const { id, name, price, image } = this.editedProduct;
+      const { id, shop_id, name, price, image } = this.editedProduct;
       const productData = {
         name: name,
         price: price,
         image: image,
+        shop_id: shop_id,
       };
+
+      if (id === undefined) {
+        console.error("Product ID is undefined. Cannot update product.");
+        return;
+      }
 
       try {
         await this.$store.dispatch("updateProduct", {

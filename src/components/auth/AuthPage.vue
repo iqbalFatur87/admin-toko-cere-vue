@@ -7,29 +7,27 @@
           <v-container>
             <v-row>
               <v-col cols="10" xl="7" class="mx-auto">
-                <h3 class="display-4">CEREBRUM ADMIN TOKO</h3>
+                <h1 class="display-4">CEREBRUM ADMIN TOKO</h1>
                 <p class="text-muted mb-4">Silahkan login terlebih dahulu</p>
                 <v-form @submit.prevent="login">
                   <v-text-field
                     v-model="email"
-                    label="Email address"
+                    label="Email"
+                    type="email"
+                    hint="Masukkan Email"
+                    placeholder="adminToko1@gmail.com"
                     required
                     autofocus
                   ></v-text-field>
                   <v-text-field
                     v-model="password"
                     label="Password"
+                    hint="Masukkan Password"
                     required
                     type="password"
                   ></v-text-field>
-                  <v-btn
-                    type="submit"
-                    class="mb-2"
-                    color="primary"
-                    block
-                    large
-                  >
-                    Sign in
+                  <v-btn type="submit" class="mb-2" color="primary" block large>
+                    Login
                   </v-btn>
                 </v-form>
                 <!-- Error Alert -->
@@ -37,7 +35,13 @@
                   Invalid credentials
                 </v-alert>
                 <!-- Success Alert -->
-                <v-alert v-if="showSuccessAlert" type="success" class="mt-3">
+                <v-alert
+                  :value="alert"
+                  v-model="alert"
+                  v-if="showSuccessAlert"
+                  type="success"
+                  class="mt-3"
+                >
                   Login success
                 </v-alert>
               </v-col>
@@ -84,7 +88,10 @@ export default {
         // Redirect to home page after a short delay (e.g., 2 seconds)
         setTimeout(() => {
           this.$router.push("/home");
-        }, 2000); // Adjust the delay as needed
+        }, 2000);
+        setTimeout(() => {
+          this.alert = false;
+        }, 1000); // Adjust the delay as needed
       } catch (error) {
         // Invalid credentials, display error alerts
         this.showErrorAlert = true;

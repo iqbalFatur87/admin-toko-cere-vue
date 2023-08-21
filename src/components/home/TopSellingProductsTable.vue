@@ -1,12 +1,12 @@
 <template>
   <div class="top-selling-products-table">
-    <table class="table table-striped">
+    <v-table>
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Product Name</th>
-          <th scope="col">Quantity Sold</th>
-          <th scope="col">Revenue</th>
+          <th scope="col" class="text-left">#</th>
+          <th scope="col" class="text-left">Product Name</th>
+          <th scope="col" class="text-left">Quantity Sold</th>
+          <th scope="col" class="text-left">Revenue</th>
         </tr>
       </thead>
       <tbody>
@@ -17,7 +17,7 @@
           <td>{{ product.revenue }}</td>
         </tr>
       </tbody>
-    </table>
+    </v-table>
   </div>
 </template>
 

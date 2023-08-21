@@ -48,16 +48,23 @@ export default createStore({
     },
     async addProduct({ commit }, productData) {
       try {
+        console.log("Adding product:", productData);
         await ProductModel.addProduct(productData);
         commit("addProduct", productData); // Use "addProduct" mutation here
+        console.log("Product added successfully");
       } catch (error) {
         console.error("Error adding product:", error);
       }
     },
     async updateProduct({ commit }, { productId, productData }) {
       try {
+        console.log("Before updating product");
         await ProductModel.updateProduct(productId, productData);
-        commit("updateProduct", { productId, productData }); // Use "updateProduct" mutation here
+        console.log("Product updated successfully");
+        
+        console.log("Committing updateProduct mutation");
+        commit("updateProduct", { productId, productData });
+        console.log("updateProduct mutation committed");
       } catch (error) {
         console.error("Error editing product:", error);
       }
@@ -69,7 +76,8 @@ export default createStore({
       } catch (error) {
         console.error("Error deleting product:", error);
       }
-    }
+      console.log("Product deleted successfully"); // Add console.log statement
+    },
   },
   getters: {
     getProducts(state) {

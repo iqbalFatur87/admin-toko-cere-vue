@@ -36,7 +36,7 @@ export default {
     },
     async editProduct(productId, productData) {
       try {
-        await ProductModel.editProduct(productId, productData); // Gunakan nama Model yang benar
+        await ProductModel.updateProduct(productId, productData); // Gunakan nama Model yang benar
         this.fetchProducts();
       } catch (error) {
         console.error('Error editing product:', error);

@@ -29,6 +29,7 @@ export default {
     try {
       console.log(`Updating product with ID: ${productId}`);
       console.log('Product data:', productData);
+      
       await api.put(`/products/${productId}`, productData);
       console.log('Product updated successfully');
     } catch (error) {
