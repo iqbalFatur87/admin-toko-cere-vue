@@ -1,5 +1,6 @@
 <template>
   <div class="top-selling-products-table">
+    <h2 class="text-center mb-4">Top Selling Products</h2>
     <v-table>
       <thead>
         <tr>

@@ -1,24 +1,24 @@
 <template>
   <div class="sales-overview-panel">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Sales Overview</h5>
-        <div class="row">
-          <div class="col-md-4">
+    <h2 class="text-center mb-4">Sales Overview</h2>
+    <v-card>
+      <v-card-text>
+        <v-row>
+          <v-col cols="4">
             <p class="card-text">Daily Sales</p>
             <p class="card-number">{{ dailySales }}</p>
-          </div>
-          <div class="col-md-4">
+          </v-col>
+          <v-col cols="4">
             <p class="card-text">Weekly Sales</p>
             <p class="card-number">{{ weeklySales }}</p>
-          </div>
-          <div class="col-md-4">
+          </v-col>
+          <v-col cols="4">
             <p class="card-text">Yearly Sales</p>
             <p class="card-number">{{ yearlySales }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 

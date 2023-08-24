@@ -3,6 +3,48 @@
   <div>
     <v-card>
       <v-card-title class="headline">Daftar Produk</v-card-title>
+      <!-- Add "Add Product" button-->
+      <v-btn color="primary" @click="openProductModal(products)">
+        <v-icon>mdi-plus</v-icon>
+        Tambah Produk
+      </v-btn>
+      <!-- Modal For Add Product-->
+      <v-dialog v-model="addModal" max-width="600px">
+        <v-card>
+          <v-card-title class="headline">Tambah Produk</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="saveProduct">
+              <v-combobox
+                v-model="addedProduct.shop_id"
+                :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+                label="ID Toko"
+                required
+              />
+              <v-text-field
+                v-model="addedProduct.name"
+                label="Nama Produk"
+                required
+              />
+              <v-text-field
+                v-model="addedProduct.price"
+                label="Harga Produk"
+                required
+              />
+              <v-text-field
+                v-model="addedProduct.image"
+                label="Gambar"
+                required
+              />
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="danger" @click="closeProductModal">Batal</v-btn>
+            <v-btn type="submit" @click="saveProduct" color="success"
+              >Simpan</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-card-text>
         <v-table>
           <template v-slot:default>
@@ -26,14 +68,13 @@
                 <td class="custom-td">Rp {{ product.price }}</td>
                 <td class="custom-td">
                   <v-img
-                    :src="product.image"
+                    src="../../assets/logo-cere.png"
                     alt="Product Image"
                     height="50px"
                   />
-                  {{ product.image }}
                 </td>
                 <td class="custom-td">
-                  <v-btn @click="openEditModal(product)" color="primary" small>
+                  <v-btn @click="openEditModal(products)" color="primary" small>
                     Edit
                   </v-btn>
                   <v-btn @click="deleteProduct(product.id)" color="error" small>
@@ -47,42 +88,39 @@
       </v-card-text>
     </v-card>
     <!-- Modal for Edit -->
-    <v-dialog v-model="editModal" max-width="500px">
+    <v-dialog v-model="editModal" max-width="600px">
       <v-card>
-        <v-card-title>Edit Produk</v-card-title>
+        <v-card-title class="headline">Edit Produk</v-card-title>
         <v-card-text>
-          <v-form @submit.prevent="saveEdit">
+          <v-form @submit.prevent="updateProduct">
+            <v-combobox
+              v-model="editedProduct.shop_id"
+              :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+              label="ID Toko"
+              required
+            />
             <v-text-field
               v-model="editedProduct.name"
-              label="Nama"
-              outlined
+              label="Nama Produk"
               required
             />
             <v-text-field
               v-model="editedProduct.price"
-              label="Harga"
-              outlined
+              label="Harga Produk"
               required
             />
-            <!-- Add more fields here if needed -->
             <v-text-field
               v-model="editedProduct.image"
-              class="invisible"
               label="Gambar"
-              outlined
-              required
-            />
-            <v-text-field
-              v-model="editedProduct.shop_id"
-              label="Shop ID"
-              outlined
               required
             />
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="closeEditModal">Batal</v-btn>
-          <v-btn type="submit" @click="saveEdit" color="success">Simpan</v-btn>
+          <v-btn color="danger" @click="closeEditModal">Batal</v-btn>
+          <v-btn type="submit" @click="updateProduct" color="success"
+            >Simpan</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -90,7 +128,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   components: {},
@@ -104,12 +142,19 @@ export default {
         { text: "Gambar", value: "image" },
         { text: "Aksi", value: "actions", sortable: false },
       ],
-      editModal: false,
-      editedProduct: {
+      addModal: false,
+      addedProduct: {
+        shop_id: "",
         name: "",
         price: "",
         image: "",
+      },
+      editModal: false,
+      editedProduct: {
         shop_id: "",
+        name: "",
+        price: "",
+        image: "",
       },
     };
   },
@@ -120,50 +165,74 @@ export default {
   },
   methods: {
     ...mapState(["getProduct"]),
-    ...mapActions(["editProduct", "deleteProduct"]),
-    editProduct(product) {
-      this.$router.put({ name: "EditProduct", params: { id: product.id } });
-    },
-    openEditModal(product) {
-      this.editedProduct = { ...product };
-      // Setelah mengambil data produk, pastikan untuk mengisi nilai id
-      this.editedProduct.id = product.id;
-      this.editModal = true;
-    },
-
-    closeEditModal() {
-      this.editedProduct = {
-        id: "", // Reset the id
+    ...mapActions([
+      "addProduct",
+      "getShops",
+      "getShopById",
+      "updateProduct",
+      "deleteProduct",
+    ]),
+    ...mapMutations(["addProduct", "updateProduct"]),
+    openProductModal(products) {
+      this.$store.dispatch("addProduct", products);
+      this.addModal = true;
+      this.addedProduct = {
+        shop_id: "",
         name: "",
         price: "",
         image: "",
       };
+    },
+    closeProductModal() {
+      this.addModal = false;
+    },
+    openEditModal(products) {
+      this.$store.dispatch("updateProduct", products);
+      this.editModal = true;
+      this.editedProduct = {
+        shop_id: products.shop_id,
+        name: products.name,
+        price: products.price,
+        image: products.image,
+      };
+    },
+    closeEditModal() {
       this.editModal = false;
     },
-
-    async saveEdit() {
-      console.log("editedProduct:", this.editedProduct);
-      const { id, shop_id, name, price, image } = this.editedProduct;
-      const productData = {
-        name: name,
-        price: price,
-        image: image,
-        shop_id: shop_id,
+    async saveProduct() {
+      await this.$store.dispatch("addProduct", this.addedProduct);
+      this.addModal = false;
+      this.addedProduct = {
+        shop_id: "",
+        name: "",
+        price: "",
+        image: "",
       };
+    },
+    async saveEdit() {
+      const { id, name, price, image, shop_id } = this.editedProduct; // Make sure you have the shop_id
+      const formData = new FormData();
 
-      if (id === undefined) {
-        console.error("Product ID is undefined. Cannot update product.");
-        return;
+      formData.append("shop_id", shop_id); // Append shop_id
+      formData.append("name", name);
+      formData.append("price", price);
+
+      // Check if a new image was selected
+      if (typeof image === "object") {
+        formData.append("image", image);
       }
 
       try {
         await this.$store.dispatch("updateProduct", {
           productId: id,
-          productData: productData,
+          productData: formData,
+          headers: {
+            "Content-Type": "multipart/form-data", // Set the correct content type
+          },
         });
         this.closeEditModal();
       } catch (error) {
-        console.error("Error editing product:", error);
+        console.log("Error editing product:", error);
       }
     },
   },

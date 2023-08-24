@@ -1,9 +1,7 @@
 <template>
-  <div class="daily-sales-chart">
-    <h2 class="text-center mb-4">Daily Sales</h2>
-    <v-card>
-      <Bar id="daily-sales-chart" :options="chartOptions" :data="chartData" />
-    </v-card>
+  <div class="monthly-sales-chart">
+    <h2 class="text-center mb-4">Monthly Sales</h2>
+    <Bar id="monthly-sales-chart" :options="chartOptions" :data="chartData" />
   </div>
 </template>
 
@@ -14,7 +12,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  BarController,
   CategoryScale,
   LinearScale,
 } from "chart.js";
@@ -23,13 +21,14 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  BarController,
   CategoryScale,
   LinearScale
 );
 
 export default {
-  name: "DailySalesChart",
+  // TODO : Call API from Laravel
+  name: "monthlySalesChart",
   components: { Bar },
   props: {
     data: {
@@ -40,18 +39,26 @@ export default {
   computed: {
     chartData() {
       const data = [
-        { date: "2023-08-01", sales: 100 },
-        { date: "2023-08-02", sales: 150 },
-        { date: "2023-08-03", sales: 120 },
-        { date: "2023-08-04", sales: 110 },
-        { date: "2023-08-05", sales: 90 },
-        { date: "2023-08-06", sales: 80 },
-        { date: "2023-08-07", sales: 130 },
-        { date: "2023-08-08", sales: 140 },
-        { date: "2023-08-09", sales: 160 },
+        // Weekly Sales Chart Dummy
+        {
+          week: "Week 1 - M1",
+          sales: 100,
+        },
+        {
+          week: "Week 2 - M1",
+          sales: 150,
+        },
+        {
+          week: "Week 3 - M1",
+          sales: 120,
+        },
+        {
+          week: "Week 4 - M1",
+          sales: 110,
+        },
       ];
 
-      const labels = data.map((d) => d.date);
+      const labels = data.map((d) => d.week);
       const datasets = [
         {
           label: "Sales",
@@ -67,10 +74,8 @@ export default {
     },
     chartOptions() {
       return {
-        responsive: true,
         scales: {
           x: {
-            type: "category",
             title: {
               display: true,
               text: "Date",
@@ -81,7 +86,12 @@ export default {
               display: true,
               text: "Sales",
             },
-            beginAtZero: true,
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Monthly Sales",
           },
         },
       };
@@ -91,5 +101,8 @@ export default {
 </script>
 
 <style scoped>
-/* Generate Daily Sales Chart Grid System */
+.monthly-sales-chart {
+  max-width: 800px;
+  margin: 0 auto;
+}
 </style>

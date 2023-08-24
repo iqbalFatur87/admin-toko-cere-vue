@@ -46,20 +46,67 @@ export default createStore({
         console.error("Error fetching products:", error);
       }
     },
+    async getProductById({ commit }, productId) {
+      try {
+        const response = await ProductModel.getProductById(productId);
+        const product = response.data;
+        console.log("Received product:", product);
+        commit("setProduct", product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    },
     async addProduct({ commit }, productData) {
       try {
-        console.log("Adding product:", productData);
-        await ProductModel.addProduct(productData);
-        commit("addProduct", productData); // Use "addProduct" mutation here
-        console.log("Product added successfully");
+        const shopId = 'shop_id';
+        await ProductModel.addProduct(productData, shopId);
+
+        console.log("Committing addProduct mutation");
+        commit("addProduct", productData);
+        console.log("addProduct mutation committed");
       } catch (error) {
         console.error("Error adding product:", error);
       }
     },
-    async updateProduct({ commit }, { productId, productData }) {
+    async addShop({ commit }, shopData){
+      try {
+        console.log("Before adding shop");
+        await ProductModel.addShop(shopData);
+        console.log("Shop added successfully");
+        
+        console.log("Committing addShop mutation");
+        commit("addShop", shopData);
+        console.log("addShop mutation committed");
+      } catch (error) {
+        console.error("Error adding shop:", error);
+      }
+    },
+    // getShops()
+    async getShops({ commit }) {
+      try {
+        console.log("Fetching shops from API...");
+        const response = await ProductModel.getShops(); // Ambil seluruh respons
+        const shops = response.data; // Ambil array produk dari respons
+        console.log("Received shops:", shops);
+        commit("setShops", shops); // Simpan array produk di state
+      } catch (error) {
+        console.error("Error fetching shops:", error);
+      }
+    },
+    async getShopById({ commit }, shopId) {
+      try {
+        const response = await ProductModel.getShopById(shopId);
+        const shop = response.data;
+        console.log("Received shop:", shop);
+        commit("setShop", shop);
+      } catch (error) {
+        console.error("Error fetching shop:", error);
+      }
+    },
+    async updateProduct({ commit }, { productId, productData, headers}) {
       try {
         console.log("Before updating product");
-        await ProductModel.updateProduct(productId, productData);
+        await ProductModel.updateProduct(productId, productData, headers);
         console.log("Product updated successfully");
         
         console.log("Committing updateProduct mutation");
