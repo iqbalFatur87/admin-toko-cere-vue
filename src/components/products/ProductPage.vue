@@ -164,7 +164,7 @@ export default {
     },
   },
   methods: {
-    ...mapState(["getProductByShopId"]),
+    ...mapState(["products"]),
     ...mapActions([
       "addProduct",
       "getShops",
