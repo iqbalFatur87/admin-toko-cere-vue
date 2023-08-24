@@ -32,6 +32,16 @@ export default {
       return null;
     }
   },
+  // GetProductByShopId
+  async getProductByShopId(shopId) {
+    try {
+      const response = await api.get(`/shop/product/${shopId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      return null;
+    }
+  },
   async addShop(shopData) {
     try {
       console.log('Adding shop:', shopData);

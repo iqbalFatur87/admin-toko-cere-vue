@@ -56,6 +56,17 @@ export default createStore({
         console.error("Error fetching product:", error);
       }
     },
+    // GetProductByShopId
+    async getProductByShopId({ commit }, shopId) {
+      try {
+        const response = await ProductModel.getProductByShopId(shopId);
+        const product = response.data;
+        console.log("Received product:", product);
+        commit("setProduct", product);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    },
     async addProduct({ commit }, productData) {
       try {
         const shopId = 'shop_id';

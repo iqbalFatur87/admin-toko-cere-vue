@@ -164,7 +164,7 @@ export default {
     },
   },
   methods: {
-    ...mapState(["getProduct"]),
+    ...mapState(["getProductByShopId"]),
     ...mapActions([
       "addProduct",
       "getShops",
@@ -239,7 +239,7 @@ export default {
   created() {
     console.log("ProductPage.vue: Component created. Fetching products...");
     this.$store
-      .dispatch("getProducts")
+      .dispatch("getProductByShopId")
       .then(() => {
         console.log("ProductPage.vue: Products fetched successfully!");
       })
