@@ -27,49 +27,56 @@ ChartJS.register(
 );
 
 export default {
-  extends: Bar,
-  data() {
-    return {
-      chartData: {
-        labels: ["January", "February", "March", "April", "May", "June"],
-        datasets: [
-          {
-            label: "Yearly Sales",
-            backgroundColor: "#3498db",
-            data: [250, 380, 470, 350, 550, 480],
-          },
-        ],
-      },
-      chartOptions: {
+  name: "YearlySalesChart",
+  components: { Bar },
+  props: {
+    data: {
+      type: Array,
+      required: true,
+    },
+  },
+  computed: {
+    chartData() {
+      const data = [
+        { month: "Jan", sales: 100 },
+        { month: "Feb", sales: 150 },
+        { month: "Mar", sales: 120 },
+        { month: "Apr", sales: 110 },
+        { month: "May", sales: 90 },
+        { month: "Jun", sales: 80 },
+        { month: "Jul", sales: 130 },
+        { month: "Aug", sales: 140 },
+        { month: "Sep", sales: 160 },
+        { month: "Oct", sales: 170 },
+        { month: "Nov", sales: 180 },
+        { month: "Dec", sales: 190 },
+      ];
+
+      const labels = data.map((d) => d.month);
+      const datasets = [
+        {
+          label: "Sales",
+          backgroundColor: "steelblue",
+          data: data.map((d) => d.sales),
+        },
+      ];
+
+      return {
+        labels,
+        datasets,
+      };
+    },
+    chartOptions() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
-          x: {
-            title: {
-              display: true,
-              text: "Months",
-            },
-          },
           y: {
-            title: {
-              display: true,
-              text: "Sales",
-            },
+            beginAtZero: true,
           },
         },
-        plugins: {
-          title: {
-            display: true,
-            text: "Yearly Sales",
-            font: {
-              size: 18,
-            },
-          },
-          legend: {
-            display: true,
-            position: "bottom",
-          },
-        },
-      },
-    };
+      };
+    },
   },
 };
 </script>
