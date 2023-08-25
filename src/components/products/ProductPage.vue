@@ -164,7 +164,7 @@ export default {
     },
   },
   methods: {
-    ...mapState(["products"]),
+    ...mapState(["userData", "authToken", "products"]),
     ...mapActions([
       "addProduct",
       "getShops",
