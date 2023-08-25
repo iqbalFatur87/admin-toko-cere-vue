@@ -109,7 +109,7 @@
               label="Harga Produk"
               required
             />
-            <v-text-field
+            <v-file-input
               v-model="editedProduct.image"
               label="Gambar"
               required
@@ -177,7 +177,7 @@ export default {
       this.$store.dispatch("addProduct", products);
       this.addModal = true;
       this.addedProduct = {
-        shop_id: "",
+        shop_id: "1",
         name: "",
         price: "",
         image: "",
