@@ -39,7 +39,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn color="danger" @click="closeProductModal">Batal</v-btn>
-            <v-btn type="submit" @click="saveProduct" color="success"
+            <v-btn type="submit" @click="addProduct" color="success"
               >Simpan</v-btn
             >
           </v-card-actions>
@@ -118,7 +118,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn color="danger" @click="closeEditModal">Batal</v-btn>
-          <v-btn type="submit" @click="saveProduct" color="success"
+          <v-btn type="submit" @click="updateProduct" color="success"
             >Simpan</v-btn
           >
         </v-card-actions>
@@ -199,40 +199,32 @@ export default {
     closeEditModal() {
       this.editModal = false;
     },
-    async saveProduct() {
-      await this.$store.dispatch("addProduct", this.addedProduct);
-      this.addModal = false;
-      this.addedProduct = {
-        shop_id: "",
-        name: "",
-        price: "",
-        image: "",
-      };
-    },
-    async saveEdit() {
-      const { id, name, price, image, shop_id } = this.editedProduct; // Make sure you have the shop_id
-      const formData = new FormData();
-
-      formData.append("shop_id", shop_id); // Append shop_id
-      formData.append("name", name);
-      formData.append("price", price);
-
-      // Check if a new image was selected
-      if (typeof image === "object") {
-        formData.append("image", image);
-      }
-
+    async addProduct(productData) {
       try {
-        await this.$store.dispatch("updateProduct", {
-          productId: id,
-          productData: formData,
-          headers: {
-            "Content-Type": "multipart/form-data", // Set the correct content type
-          },
-        });
-        this.closeEditModal();
+        await this.$store.dispatch("addProduct", productData);
+        this.addModal = false;
+        this.addedProduct = {
+          shop_id: "",
+          name: "",
+          price: "",
+          image: "",
+        };
       } catch (error) {
-        console.log("Error editing product:", error);
+        console.log("Error adding product:", error);
+      }
+    },
+    async updateProduct(productData) {
+      try {
+        await this.$store.dispatch("updateProduct", productData);
+        this.editModal = false;
+        this.editedProduct = {
+          shop_id: "",
+          name: "",
+          price: "",
+          image: "",
+        };
+      } catch (error) {
+        console.log("Error updating product:", error);
       }
     },
     async deleteProduct(productId) {
