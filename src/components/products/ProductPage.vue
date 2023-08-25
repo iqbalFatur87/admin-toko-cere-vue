@@ -235,6 +235,13 @@ export default {
         console.log("Error editing product:", error);
       }
     },
+    async deleteProduct(productId) {
+      try {
+        await this.$store.dispatch("deleteProduct", productId);
+      } catch (error) {
+        console.log("Error deleting product:", error);
+      }
+    },
   },
   created() {
     console.log("ProductPage.vue: Component created. Fetching products...");
