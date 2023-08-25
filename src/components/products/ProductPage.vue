@@ -118,7 +118,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn color="danger" @click="closeEditModal">Batal</v-btn>
-          <v-btn type="submit" @click="updateProduct" color="success"
+          <v-btn type="submit" @click="saveProduct" color="success"
             >Simpan</v-btn
           >
         </v-card-actions>
